@@ -16,7 +16,7 @@ const Home = () => {
         if (err) {
           toast.error(err);
           navigate("/");
-          return window.location.reload()
+          return window.location.reload();
         }
       });
       navigate("/chat", { replace: true });
@@ -41,6 +41,7 @@ const Home = () => {
           onChange={(e) => {
             setdata({ ...data, username: e.target.value });
           }}
+          autoFocus={true}
           required
         />
         <select

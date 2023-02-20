@@ -1,9 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { SoketProvider } from "./context/context";
 import style from "./css/style.module.css";
 
 const Ui = ({ children }) => {
   const { socketIO } = useContext(SoketProvider);
+
+  const navigate = useNavigate();
 
   const [roomData, setroomData] = useState({ data: { room: "", users: [] } });
 
@@ -16,6 +19,13 @@ const Ui = ({ children }) => {
       socketIO.disconnect();
     };
   }, [socketIO]);
+
+  const diffRoomHandler = (e) => {
+    e.preventDefault();
+
+    navigate("/");
+    window.location.reload();
+  };
 
   return (
     <>
@@ -37,6 +47,15 @@ const Ui = ({ children }) => {
                 </li>
               ))}
           </div>
+        </div>
+
+        <div>
+          <button
+            className=" bg-bgColor p-2 rounded dark:bg-bgDarkColor"
+            onClick={diffRoomHandler}
+          >
+            Select different Room
+          </button>
         </div>
       </nav>
       {children}
