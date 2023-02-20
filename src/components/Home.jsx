@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { SoketProvider } from "./context/context";
+import { toast } from "react-toastify";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -11,8 +12,13 @@ const Home = () => {
   const clickHandler = (e) => {
     e.preventDefault();
     if (data.username !== "" && data.room !== "") {
-      socketIO.emit("join", data);
-
+      socketIO.emit("join", data, (err) => {
+        if (err) {
+          toast.error(err);
+          navigate("/");
+          return window.location.reload()
+        }
+      });
       navigate("/chat", { replace: true });
     }
   };
