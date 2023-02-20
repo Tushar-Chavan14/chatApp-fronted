@@ -4,9 +4,7 @@ import { io } from "socket.io-client";
 
 export const SoketProvider = createContext({});
 
-const socketIO = io(
-  "https://devroom.up.railway.app/" || "http://localhost:3000"
-);
+const socketIO = io("https://devroom.up.railway.app/");
 
 const Soketprovider = ({ children }) => {
   const [data, setdata] = useState({
