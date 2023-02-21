@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 import React from "react";
 import { io } from "socket.io-client";
 
@@ -12,8 +12,12 @@ const Soketprovider = ({ children }) => {
     room: "",
   });
 
+  const [disconect, setdisconect] = useState(false);
+
   return (
-    <SoketProvider.Provider value={{ data, setdata, socketIO }}>
+    <SoketProvider.Provider
+      value={{ data, setdata, socketIO, disconect, setdisconect }}
+    >
       {children}
     </SoketProvider.Provider>
   );

@@ -7,7 +7,7 @@ import style from "./css/style.module.css";
 import { toast } from "react-toastify";
 
 const Chatpage = () => {
-  const { socketIO, data } = useContext(SoketProvider);
+  const { socketIO, data, setdisconect } = useContext(SoketProvider);
 
   const btnRef = useRef();
   const bottomRef = useRef(null);
@@ -35,7 +35,8 @@ const Chatpage = () => {
     });
 
     return () => {
-      socketIO.disconnect();
+      socketIO.removeListener("message");
+      socketIO.removeListener("locMessage");
     };
   }, [socketIO]);
 
@@ -52,7 +53,9 @@ const Chatpage = () => {
 
     socketIO.emit("clienMessage", msg, (err) => {
       btnRef.current.removeAttribute("disabled");
-      if (!err) {
+      if (data.username === "") {
+        setdisconect((prev) => !prev);
+      } else if (!err) {
         setmessages((prev) => {
           return [
             ...prev,
@@ -78,19 +81,23 @@ const Chatpage = () => {
 
     btnRef.current.setAttribute("disabled", true);
 
-    navigator.geolocation.getCurrentPosition((value) => {
-      socketIO.emit(
-        "location",
-        {
-          latitude: value.coords.latitude,
-          longitude: value.coords.longitude,
-        },
-        () => {
-          btnRef.current.removeAttribute("disabled");
-          toast.success("location shared");
-        }
-      );
-    });
+    if (data.username === "") {
+      setdisconect((prev) => !prev);
+    } else {
+      navigator.geolocation.getCurrentPosition((value) => {
+        socketIO.emit(
+          "location",
+          {
+            latitude: value.coords.latitude,
+            longitude: value.coords.longitude,
+          },
+          () => {
+            btnRef.current.removeAttribute("disabled");
+            toast.success("location shared");
+          }
+        );
+      });
+    }
   };
 
   return (

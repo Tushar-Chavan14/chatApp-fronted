@@ -2,13 +2,22 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SoketProvider } from "./context/context";
 import style from "./css/style.module.css";
+import { Modal } from "./modal/Modal";
 
 const Ui = ({ children }) => {
-  const { socketIO } = useContext(SoketProvider);
+  const { socketIO, disconect, setdisconect, data } = useContext(SoketProvider);
 
   const navigate = useNavigate();
 
   const [roomData, setroomData] = useState({ data: { room: "", users: [] } });
+
+  useEffect(() => {
+    if (data.username === "") {
+      setdisconect((prev) => !prev);
+    }
+
+    return () => {};
+  }, [data]);
 
   useEffect(() => {
     socketIO.on("roomData", (data) => {
@@ -16,7 +25,7 @@ const Ui = ({ children }) => {
     });
 
     return () => {
-      socketIO.disconnect();
+      socketIO.removeListener("roomData");
     };
   }, [socketIO]);
 
@@ -58,6 +67,22 @@ const Ui = ({ children }) => {
           </button>
         </div>
       </nav>
+      <Modal
+        shouldShow={disconect}
+        onRequestClose={() => {
+          setdisconect((prev) => !prev);
+        }}
+      >
+        <div className="flex flex-col items-center justify-center gap-11 ">
+          <h1>your disconnected</h1>
+          <button
+            className="bg-secondary px-2 rounded dark:bg-darkSecondary text-bgDarkColor"
+            onClick={diffRoomHandler}
+          >
+            connect!
+          </button>
+        </div>
+      </Modal>
       {children}
     </>
   );

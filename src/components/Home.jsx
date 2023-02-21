@@ -30,7 +30,7 @@ const Home = () => {
         onSubmit={clickHandler}
       >
         <div className="text-center text-3xl">
-          <h1>Chat app</h1>
+          <h1>Dev Room</h1>
         </div>
         <input
           type="text"
